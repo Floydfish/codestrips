@@ -10,7 +10,7 @@ db.serialize(() => {
             body TEXT NOT NULL,
             background TEXT NOT NULL,
             bubble_type TEXT NOT NULL,
-            bubble_text TEXT NOT NULL DEFAULT = "",
-            caption TEXT NOT NULL DEFAULT = "")`
-    );
+            bubble_text TEXT NOT NULL DEFAULT "",
+            caption TEXT NOT NULL DEFAULT "")`
+    )
 });
