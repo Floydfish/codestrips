@@ -10,6 +10,8 @@ const PORT = process.env.PORT || 4001;
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(express.static('public'));
-app.listen(PORT);
+app.listen(PORT, () => {
+    `Server is listening on port: ${PORT}`
+});
 
 module.exports = app;
