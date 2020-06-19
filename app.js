@@ -7,7 +7,6 @@ const db = new sqlite3.Database(process.env.TEST_DATABASE || './db.sqlite');
 
 const app = express();
 
-
 const PORT = process.env.PORT || 4001;
 
 app.use(bodyParser.json());
@@ -22,7 +21,7 @@ app.get('/strips', (req, res, next) => {
         if (err) {
             res.sendStatus(500); // Internal server error
         } else {
-            res.send({ strips: rows });
+            res.send({strips: rows});
         }
     })
 });
@@ -33,10 +32,11 @@ const validateStrip = (req,res,next) => {
         !stripToCreate.head ||
         !stripToCreate.body ||
         !stripToCreate.background ||
-        !stripToCreate.bubleType 
+        !stripToCreate.bubbleType 
     ) {
         return res.sendStatus(400); // bad request
-    }   
+    }
+    next();   
 }
 
 app.post('/strips', validateStrip, (req, res, next) => {
@@ -61,7 +61,7 @@ app.post('/strips', validateStrip, (req, res, next) => {
                 if (!row) {
                     return res.sendStatus(500)
                 }
-                res.status(201).send({ strip: row})
+                res.status(201).send({ strip: row })
             })
         }
     )
