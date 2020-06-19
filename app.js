@@ -27,4 +27,44 @@ app.get('/strips', (req, res, next) => {
     })
 });
 
+const validateStrip = (req,res,next) => {
+    const stripToCreate = req.body.strip;
+    if (
+        !stripToCreate.head ||
+        !stripToCreate.body ||
+        !stripToCreate.background ||
+        !stripToCreate.bubleType 
+    ) {
+        return res.sendStatus(400); // bad request
+    }   
+}
+
+app.post('/strips', validateStrip, (req, res, next) => {
+    const stripToCreate = req.body.strip;
+    db.run(
+        `INSERT INTO Strip (head, body, background, bubble_type, bubble_text, caption)
+        VALUES ($head, $body, $background, $bubbleType, $bubbleText, $caption)`,
+        {
+            $head: stripToCreate.head,
+            $body: stripToCreate.body,
+            $background: stripToCreate.background,
+            $bubbleType: stripToCreate.bubbleType,
+            $bubbleText: stripToCreate.bubbleText,
+            $caption: stripToCreate.caption
+
+        },
+        function(err) { // allow theuse of this.lastID
+            if (err) {
+                return res.sendStatus(500); // internal server error
+            }
+            db.get(`SELECT * FROM Strip WHERE id = ${this.lastID}`, (err, row) => {
+                if (!row) {
+                    return res.sendStatus(500)
+                }
+                res.status(201).send({ strip: row})
+            })
+        }
+    )
+})
+
 module.exports = app;
